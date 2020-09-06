@@ -1,0 +1,44 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signin.css' %}">
+    <title>Login</title>
+</head>
+<body>
+    <form class="form-signin" action="/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal"><center>LOGIN</center></h1>
+        {% if messages %}
+            {% for msg in messages %}
+                <center><p class="font-weight-regular f-16" style="color: red">{{ msg }}</p></center>
+            {% endfor %}
+        {% endif %}
+        <div class="form-group">
+            <input name="Name" type="text" class="form-control" placeholder="Name..." required autofocus>
+        </div>
+        <div class="form-group">
+            <input name="Password" type="password" class="form-control" placeholder="Password..." required>
+        </div>
+        <div class="form-group" style="text-align: right;">
+            <a href="/Registration" >Don't have an account ?</a>
+        </div>
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Login" name="Submit">
+<!--        <a href="/UserHome" >UserHome ?</a>-->
+    </form>
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

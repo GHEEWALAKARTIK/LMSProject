@@ -1,0 +1,154 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <title>UserHome</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">User Home</a>
+            <div class="collapse navbar-collapse" id="navbarsExample07">
+              <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                      <a class="nav-link" href="/Logout">Logout</a>
+                  </li>
+              </ul>
+              <form class="form-inline my-2 my-md-0">
+                  <a class="navbar-brand" href="#">Hello, {{ Name }}</a>
+              </form>
+            </div>
+        </div>
+    </nav>
+
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+            <!-- Circle Buttons -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Apply for leave</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                            {% for msg in messages %}
+                                <p class="font-weight-regular f-16" style="color: red;">*{{ msg }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="p-5">
+                            <form class="user" action="/UserHome" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="text" name="UID" class="form-control" value="{{ ID }}" hidden>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label class="pb-1 grey-text">From Date</label>
+                                        <input type="date" name="FromDate" class="form-control" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="pb-1 grey-text">To Date</label>
+                                        <input type="date" name="ToDate" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="pb-1 grey-text">Description</label>
+                                    <textarea name="Description" class="form-control" rows="6" placeholder="Description..." style="resize: none;" required></textarea>
+                                </div>
+                                <hr>
+                                <input type="submit" name="submit" class="btn btn-primary btn-user" value="Apply">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Your leave list</h6>
+                </div>
+                    <div class="card-body">
+                        {% if All_User_Leave %}
+                            {% for User_Leave in All_User_Leave %}
+                                {% if User_Leave.UID == ID %}
+                                    Remaining leave : {{ User_Leave.Total_Leave }}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <hr>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th><center>ID</center></th>
+                                        <th><center>Name</center></th>
+                                        <th><center>Start Date</center></th>
+                                        <th><center>End Date</center></th>
+                                        <th><center>Description</center></th>
+                                        <th><center>Status</center></th>
+                                    </tr>
+                                </thead>
+                                {% if All_Leave %}
+                                    {% for Leave in All_Leave %}
+                                        {% if Leave.UID_id == ID %}
+                                            <tbody>
+                                                <tr>
+                                                    <td><center>{{ Leave.LID }}</center></td>
+                                                    <td><center>{{ Leave.UID.Name }}</center></td>
+                                                    <td><center>{{ Leave.Start_Date }}</center></td>
+                                                    <td><center>{{ Leave.End_Date}}</center></td>
+                                                    <td><center>{{ Leave.Description }}</center></td>
+                                                    {% if Leave.Leave_Status == False %}
+                                                        <td><center>&#10060;</center></td>
+                                                    {% else %}
+                                                        <td><center>&#x2705;</center></td>
+                                                    {% endif %}
+                                                </tr>
+                                            </tbody>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </table>
+                        </div>
+                        <br>
+                        {% if All_Leave.has_other_pages %}
+                            <ul class="pagination pagination-md">
+                            {% if All_Leave.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ All_Leave.previous_page_number }}">&laquo;</a></li>
+                            {% endif %}
+
+                            {% for i in All_Leave.paginator.page_range %}
+                                {% if All_Leave.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% elif i > All_Leave.number|add:'-5' and i < All_Leave.number|add:'5' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if All_Leave.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ All_Leave.next_page_number }}">&raquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ All_Leave.paginator.num_pages }}">Last</a></li>
+                            {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

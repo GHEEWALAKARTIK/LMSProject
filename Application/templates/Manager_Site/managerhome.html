@@ -1,0 +1,109 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <title>Manager Home</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand">Manager Home</a>
+            <div class="collapse navbar-collapse" id="navbarsExample07">
+              <ul class="navbar-nav mr-auto">
+                  <li class="nav-item active">
+                      <a class="nav-link" href="/Logout">Logout</a>
+                  </li>
+              </ul>
+              <form class="form-inline my-2 my-md-0">
+                  <a class="navbar-brand" href="#">Hello, {{ Name }}</a>
+              </form>
+            </div>
+        </div>
+    </nav>
+
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Leave Application's</h6>
+                </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th><center>ID</center></th>
+                                        <th><center>Name</center></th>
+                                        <th><center>Start Date</center></th>
+                                        <th><center>End Date</center></th>
+                                        <th><center>Description</center></th>
+                                        <th><center>Approve</center></th>
+                                        <th><center>Disapprove</center></th>
+                                    </tr>
+                                </thead>
+                                {% if All_Leave %}
+                                    {% for Leave in All_Leave %}
+                                        <tbody>
+                                            <tr>
+                                                <td><center>{{ Leave.LID }}</center></td>
+                                                <td><center>{{ Leave.UID.Name }}</center></td>
+                                                <td><center>{{ Leave.Start_Date | date:"d-M-Y"}}</center></td>
+                                                <td><center>{{ Leave.End_Date | date:"d-M-Y"}}</center></td>
+                                                <td><center>{{ Leave.Description }}</center></td>
+                                                <td><center>
+                                                    <a href="{{ Leave.LID }}/Approve_User_Leave" style="font-size:25px;">&#x2705;</a>
+                                                </center></td>
+                                                <td><center>
+                                                    <a href="{{ Leave.LID }}/Disapprove_User_Leave" style="font-size:25px;">&#10060;</a>
+                                                </center></td>
+
+                                            </tr>
+                                        </tbody>
+                                    {% endfor %}
+                                {% endif %}
+                            </table>
+                        </div>
+                        <br>
+                        {% if All_Leave.has_other_pages %}
+                            <ul class="pagination pagination-md">
+                            {% if All_Leave.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ All_Leave.previous_page_number }}">&laquo;</a></li>
+                            {% endif %}
+
+                            {% for i in All_Leave.paginator.page_range %}
+                                {% if All_Leave.number == i %}
+                                    <li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% elif i > All_Leave.number|add:'-5' and i < All_Leave.number|add:'5' %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if All_Leave.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ All_Leave.next_page_number }}">&raquo;</a></li>
+                                <li class="page-item"><a class="page-link" href="?page={{ All_Leave.paginator.num_pages }}">Last</a></li>
+                            {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>
